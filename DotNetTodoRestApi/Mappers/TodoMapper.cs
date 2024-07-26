@@ -15,5 +15,15 @@ namespace DotNetTodoRestApi.Mappers
                 CreateadOn = todo.CreateadOn,
             };
         }
+
+        public static Todo ToTodoFromCreateDto(this CreateTodoRequestDto todoDto)
+        {
+            return new Todo
+            {
+                Content = todoDto.Content,
+                IsCompleted = todoDto.IsCompleted,
+                CreateadOn = todoDto.CreateadOn,
+            };
+        }
     }
 }

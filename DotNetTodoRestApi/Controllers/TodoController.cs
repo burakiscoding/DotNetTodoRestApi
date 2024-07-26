@@ -1,7 +1,10 @@
 ﻿using DotNetTodoRestApi.Data;
+using DotNetTodoRestApi.Dtos.Todo;
+using DotNetTodoRestApi.Mappers;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System.Reflection.Metadata.Ecma335;
 
 namespace DotNetTodoRestApi.Controllers
 {
@@ -17,21 +20,60 @@ namespace DotNetTodoRestApi.Controllers
         }
 
         [HttpGet]
-        public async Task<IResult> GetAllAsync()
+        public async Task<IActionResult> GetAllAsync()
         {
-            var todos = await _context.Todos.ToListAsync();
-            return TypedResults.Ok(todos);
+            var todos = await _context.Todos.Select(e => e.toTodoDto()).ToListAsync();
+            return Ok(todos);
         }
 
         [HttpGet("{id}")]
-        public async Task<IResult> GetByIdAsync([FromRoute] int id)
+        [ActionName(nameof(GetByIdAsync))]
+        public async Task<IActionResult> GetByIdAsync([FromRoute] int id)
         {
             var todo = await _context.Todos.FindAsync(id);
             if (todo == null)
             {
-                return TypedResults.NotFound();
+                return NotFound();
             }
-            return TypedResults.Ok(todo);
+            return Ok(todo.toTodoDto());
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Create([FromBody] CreateTodoRequestDto todoDto)
+        {
+            var todo = todoDto.ToTodoFromCreateDto();
+            await _context.Todos.AddAsync(todo);
+            await _context.SaveChangesAsync();
+            return CreatedAtAction(nameof(GetByIdAsync), new { id = todo.Id }, todo.toTodoDto());
+        }
+
+        [HttpPut("{id}")]
+        public async Task<IActionResult> Update([FromRoute] int id, [FromBody] UpdateTodoRequestDto todoDto)
+        {
+            var todo = await _context.Todos.FindAsync(id);
+            if (todo == null)
+            {
+                return NotFound();
+            }
+
+            todo.Content = todoDto.Content;
+            todo.IsCompleted = todoDto.IsCompleted;
+            await _context.SaveChangesAsync();
+            return Ok(todo.toTodoDto());
+        }
+
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> Delete([FromRoute] int id)
+        {
+            var todo = await _context.Todos.FindAsync(id);
+            if(todo == null)
+            {
+                return NotFound();
+            }
+
+            _context.Todos.Remove(todo);
+            await _context.SaveChangesAsync();
+            return NoContent();
         }
     }
 }
