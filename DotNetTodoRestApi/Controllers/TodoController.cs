@@ -1,11 +1,7 @@
-﻿using DotNetTodoRestApi.Data;
-using DotNetTodoRestApi.Dtos.Todo;
+﻿using DotNetTodoRestApi.Dtos.Todo;
 using DotNetTodoRestApi.Mappers;
 using DotNetTodoRestApi.Repositories;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using System.Reflection.Metadata.Ecma335;
 
 namespace DotNetTodoRestApi.Controllers
 {

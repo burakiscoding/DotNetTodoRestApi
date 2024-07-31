@@ -12,6 +12,11 @@ namespace DotNetTodoRestApi.Repositories
             _context = context;
         }
 
+        public Task<bool> AnyAsync(int id)
+        {
+            return _context.Todos.AnyAsync(e => e.Id == id);
+        }
+
         public async Task<Todo> CreateAsync(Todo todo)
         {
             await _context.Todos.AddAsync(todo);
@@ -33,12 +38,12 @@ namespace DotNetTodoRestApi.Repositories
 
         public Task<List<Todo>> GetAllAsync()
         {
-            return _context.Todos.ToListAsync();
+            return _context.Todos.Include(e => e.Comments).ToListAsync();
         }
 
         public async Task<Todo?> GetByIdAsync(int id)
         {
-            return await _context.Todos.FindAsync(id);
+            return await _context.Todos.Include(e => e.Comments).FirstOrDefaultAsync(e => e.Id == id);
         }
 
         public async Task<Todo?> UpdateAsync(int id, Todo todo)

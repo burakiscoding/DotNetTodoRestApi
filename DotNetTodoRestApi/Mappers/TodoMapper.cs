@@ -12,6 +12,7 @@ namespace DotNetTodoRestApi.Mappers
                 Id = todo.Id,
                 Content = todo.Content,
                 IsCompleted = todo.IsCompleted,
+                Comments = todo.Comments.Select(e => e.toCommentDto()).ToList(),
                 CreateadOn = todo.CreateadOn,
             };
         }
