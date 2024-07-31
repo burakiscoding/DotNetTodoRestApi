@@ -12,6 +12,11 @@ namespace DotNetTodoRestApi.Repositories
             _context = context;
         }
 
+        public Task<bool> AnyAsync(int id)
+        {
+            return _context.Todos.AnyAsync(e => e.Id == id);
+        }
+
         public async Task<Todo> CreateAsync(Todo todo)
         {
             await _context.Todos.AddAsync(todo);

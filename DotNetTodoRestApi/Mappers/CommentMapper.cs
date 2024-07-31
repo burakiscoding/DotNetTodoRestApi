@@ -15,5 +15,15 @@ namespace DotNetTodoRestApi.Mappers
                 TodoId = comment.TodoId,
             };
         }
+
+        public static Comment toCommentFromCreate(this CreateCommentDto dto, int todoId)
+        {
+            return new Comment
+            {
+                Content = dto.Content,
+                CreateadOn = DateTime.Now,
+                TodoId = todoId,
+            };
+        }
     }
 }

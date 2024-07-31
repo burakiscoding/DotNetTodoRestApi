@@ -9,5 +9,6 @@ namespace DotNetTodoRestApi.Repositories
         Task<Todo> CreateAsync(Todo todo);
         Task<Todo?> UpdateAsync(int id, Todo todo);
         Task<Todo?> DeleteAsync(int id);
+        Task<bool> AnyAsync(int id);
     }
 }

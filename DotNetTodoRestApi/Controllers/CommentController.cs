@@ -1,4 +1,5 @@
-﻿using DotNetTodoRestApi.Mappers;
+﻿using DotNetTodoRestApi.Dtos.Comment;
+using DotNetTodoRestApi.Mappers;
 using DotNetTodoRestApi.Repositories;
 using Microsoft.AspNetCore.Mvc;
 
@@ -9,9 +10,11 @@ namespace DotNetTodoRestApi.Controllers
     public class CommentController : ControllerBase
     {
         private readonly ICommentRepository _commentRepository;
-        public CommentController(ICommentRepository commentRepository)
+        private readonly ITodoRepository _todoRepository;
+        public CommentController(ICommentRepository commentRepository, ITodoRepository todoRepository)
         {
             _commentRepository = commentRepository;
+            _todoRepository = todoRepository;
         }
 
         [HttpGet]
@@ -31,6 +34,18 @@ namespace DotNetTodoRestApi.Controllers
                 return NotFound();
             }
             return Ok(comment.toCommentDto());
+        }
+
+        [HttpPost("{todoId:int}")]
+        public async Task<IActionResult> CreateAsync([FromRoute] int todoId, [FromBody] CreateCommentDto commentDto)
+        {
+            if (!await _todoRepository.AnyAsync(todoId))
+            {
+                return NotFound();
+            }
+            var comment = commentDto.toCommentFromCreate(todoId);
+            await _commentRepository.CreateAsync(comment);
+            return CreatedAtAction(nameof(GetByIdAsync), new { id = comment.Id }, comment.toCommentDto());
         }
     }
 }
