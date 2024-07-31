@@ -47,5 +47,27 @@ namespace DotNetTodoRestApi.Controllers
             await _commentRepository.CreateAsync(comment);
             return CreatedAtAction(nameof(GetByIdAsync), new { id = comment.Id }, comment.toCommentDto());
         }
+
+        [HttpPut("{id:int}")]
+        public async Task<IActionResult> UpdateAsync([FromRoute] int id, [FromBody] UpdateCommentDto commentDto)
+        {
+            var comment = await _commentRepository.UpdateAsync(id, commentDto);
+            if (comment == null)
+            {
+                return NotFound();
+            }
+            return Ok(comment.toCommentDto());
+        }
+
+        [HttpDelete("{id:int}")]
+        public async Task<IActionResult> DeleteAsync([FromRoute] int id)
+        {
+            var comment = await _commentRepository.DeleteAsync(id);
+            if (comment == null) 
+            {
+                return NotFound();
+            }
+            return NoContent();
+        }
     }
 }
