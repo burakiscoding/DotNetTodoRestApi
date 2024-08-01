@@ -1,6 +1,7 @@
 ﻿using DotNetTodoRestApi.Dtos.Todo;
 using DotNetTodoRestApi.Mappers;
 using DotNetTodoRestApi.Repositories;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace DotNetTodoRestApi.Controllers
