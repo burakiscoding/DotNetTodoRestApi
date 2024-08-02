@@ -1,5 +1,8 @@
-﻿namespace DotNetTodoRestApi.Models
+﻿using System.ComponentModel.DataAnnotations.Schema;
+
+namespace DotNetTodoRestApi.Models
 {
+    [Table("Comments")]
     public class Comment
     {
         public int Id { get; set; }
