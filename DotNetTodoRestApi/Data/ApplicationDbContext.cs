@@ -14,6 +14,7 @@ namespace DotNetTodoRestApi.Data
 
         public DbSet<Todo> Todos { get; set; }
         public DbSet<Comment> Comments { get; set; }
+        public DbSet<LikedTodo> LikedTodos { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
@@ -33,6 +34,18 @@ namespace DotNetTodoRestApi.Data
                 },
             };
             builder.Entity<IdentityRole>().HasData(roles);
+
+            builder.Entity<LikedTodo>(x => x.HasKey(p => new { p.AppUserId, p.TodoId }));
+
+            builder.Entity<LikedTodo>()
+                .HasOne(u => u.AppUser)
+                .WithMany(u => u.LikedTodos)
+                .HasForeignKey(p => p.AppUserId);
+
+            builder.Entity<LikedTodo>()
+                .HasOne(u => u.Todo)
+                .WithMany(u => u.LikedTodos)
+                .HasForeignKey(p => p.TodoId);
         }
     }
 }
